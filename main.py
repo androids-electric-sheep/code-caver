@@ -2,10 +2,22 @@ import argparse
 
 
 def parse_cli_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--file", type=str, required=True)
-    parser.add_argument("--byte", type=str, default="0x00")
-    parser.add_argument("--minimum-length", type=int, default=5)
+    parser = argparse.ArgumentParser(
+        description="Tool to find repeating sequences of the same byte in an executable, mainly used for finding empty code caves"
+    )
+    parser.add_argument(
+        "--file",
+        type=str,
+        required=True,
+        help="The file to examine for the repeating byte sequence",
+    )
+    parser.add_argument("--byte", type=str, default="0x00", help="The byte to look for")
+    parser.add_argument(
+        "--minimum-length",
+        type=int,
+        default=5,
+        help="How many times the byte has to repeat in a row to be considered interesting",
+    )
     args = parser.parse_args()
     return args
 
