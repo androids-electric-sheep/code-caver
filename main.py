@@ -1,4 +1,11 @@
 import argparse
+from dataclasses import dataclass
+
+
+@dataclass
+class CodeCave:
+    start: int
+    size: int
 
 
 def parse_cli_args() -> argparse.Namespace:
@@ -22,12 +29,9 @@ def parse_cli_args() -> argparse.Namespace:
     return args
 
 
-def main() -> None:
-    args = parse_cli_args()
-    with open(args.file, "rb") as in_fh:
-        data = in_fh.read()
+def find_caves(data: bytes, target_byte: int, minimum_length: int) -> list[CodeCave]:
+    caves_found = []
 
-    target_byte = int(args.byte, 16)
     last_found = -1
     for index, byte in enumerate(data):
         # Skip ahead so we don't work within the same cave multiple times
@@ -38,12 +42,31 @@ def main() -> None:
             length = 1
             while index + length < len(data) and data[index + length] == target_byte:
                 length += 1
-            if length >= args.minimum_length:
+            if length >= minimum_length:
                 # Only display the caves of an interesting size
+                caves_found.append(CodeCave(start=index, size=length))
                 print(index, length)
 
             # Skip ahead to the byte immediately following the cave
             last_found = index + length
+
+    return caves_found
+
+
+def main() -> None:
+    args = parse_cli_args()
+    with open(args.file, "rb") as in_fh:
+        data = in_fh.read()
+
+    target_byte = int(args.byte, 16)
+    caves_found = find_caves(data, target_byte, args.minimum_length)
+
+    if not caves_found:
+        print("No caves found")
+        exit(1)
+
+    for cave in caves_found:
+        print(cave)
 
 
 if __name__ == "__main__":
