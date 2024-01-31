@@ -25,6 +25,11 @@ def parse_cli_args() -> argparse.Namespace:
         default=5,
         help="How many times the byte has to repeat in a row to be considered interesting",
     )
+    parser.add_argument(
+        "--sort",
+        action="store_true",
+        help="Sort the caves found by size",
+    )
     args = parser.parse_args()
     return args
 
@@ -64,6 +69,9 @@ def main() -> None:
     if not caves_found:
         print("No caves found")
         exit(1)
+
+    if args.sort:
+        caves_found = sorted(caves_found, key=lambda cave: cave.size)
 
     for cave in caves_found:
         print(cave)
