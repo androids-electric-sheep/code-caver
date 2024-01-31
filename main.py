@@ -7,6 +7,9 @@ class CodeCave:
     start: int
     size: int
 
+    def __str__(self) -> str:
+        return f"CodeCave[start={hex(self.start)}, size={hex(self.size)}]"
+
 
 def parse_cli_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
